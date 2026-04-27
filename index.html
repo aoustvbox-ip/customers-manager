@@ -19,8 +19,8 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>نظام إدارة الاشتراكات</h3>
-        <a href="https://wa.me/9647866134931" target="_blank" class="btn btn-support">📞 خدمة الزبائن</a>
+        <h4>لوحة إدارة الاشتراكات</h4>
+        <a href="https://wa.me/9647866134931" target="_blank" class="btn btn-support">📞 الدعم الفني</a>
     </div>
 
     <div class="card p-3 mb-4">
@@ -29,9 +29,9 @@
             <div class="col-md-2"><input type="text" id="custUser" class="form-control" placeholder="👤 اليوزر" required></div>
             <div class="col-md-2"><input type="text" id="custPass" class="form-control" placeholder="🔑 الباسوورد" required></div>
             <div class="col-md-2"><input type="tel" id="custPhone" class="form-control" placeholder="رقم هاتف الزبون"></div>
-            <div class="col-md-3"><input type="text" id="expiryDate" class="form-control" placeholder="📅 تاريخ الانتهاء (يدوي)" required></div>
+            <div class="col-md-3"><input type="text" id="expiryDate" class="form-control" placeholder="📅 تاريخ الانتهاء" required></div>
             <div class="col-12 mt-3 text-center">
-                <button type="submit" class="btn btn-primary w-100">حفظ في النظام</button>
+                <button type="submit" class="btn btn-primary w-100">حفظ الاشتراك</button>
             </div>
         </form>
     </div>
@@ -56,6 +56,7 @@
 <script>
     const form = document.getElementById('customerForm');
     const tableBody = document.getElementById('customerTableBody');
+    const supportNumber = "009647866134931"; // رقم خدمة الزبائن الثابت
 
     document.addEventListener('DOMContentLoaded', displayCustomers);
 
@@ -97,15 +98,15 @@
     }
 
     function copyData(name, user, pass, expiry) {
-        const text = `مرحباً ${name}\n\nتم تفعيل اشتراكك بنجاح:\n👤 اليوزر: ${user}\n🔑 الباسوورد: ${pass}\n📅 تاريخ الانتهاء: ${expiry}\n\nنتمنى لك مشاهدة ممتعة!`;
+        const text = `مرحباً ${name}\n\nتم تفعيل اشتراكك بنجاح:\n👤 اليوزر: ${user}\n🔑 الباسوورد: ${pass}\n📅 تاريخ الانتهاء: ${expiry}\n\n📞 خدمة الزبائن: ${supportNumber}\n\nنتمنى لك مشاهدة ممتعة!`;
         navigator.clipboard.writeText(text).then(() => {
-            alert('تم نسخ الرسالة المنسقة بنجاح!');
+            alert('تم نسخ الرسالة مع رقم خدمة الزبائن!');
         });
     }
 
     function sendWhatsApp(name, user, pass, phone, expiry) {
         if(!phone) { alert('يرجى إضافة رقم هاتف للزبون أولاً'); return; }
-        const message = `مرحباً ${name}%0A%0Aتم تفعيل اشتراكك بنجاح:%0A👤 اليوزر: ${user}%0A🔑 الباسوورد: ${pass}%0A📅 تاريخ الانتهاء: ${expiry}%0A%0Aنتمنى لك مشاهدة ممتعة!`;
+        const message = `مرحباً ${name}%0A%0Aتم تفعيل اشتراكك بنجاح:%0A👤 اليوزر: ${user}%0A🔑 الباسوورد: ${pass}%0A📅 تاريخ الانتهاء: ${expiry}%0A%0A📞 خدمة الزبائن: ${supportNumber}%0A%0Aنتمنى لك مشاهدة ممتعة!`;
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     }
 
