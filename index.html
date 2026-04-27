@@ -22,10 +22,10 @@
     <div class="card p-3 mb-4">
         <form id="customerForm" class="row g-2">
             <div class="col-md-3"><input type="text" id="custName" class="form-control" placeholder="اسم الزبون" required></div>
-            <div class="col-md-2"><input type="text" id="custUser" class="form-control" placeholder="اليوزر" required></div>
-            <div class="col-md-2"><input type="text" id="custPass" class="form-control" placeholder="الباسوورد" required></div>
+            <div class="col-md-2"><input type="text" id="custUser" class="form-control" placeholder="👤 اليوزر" required></div>
+            <div class="col-md-2"><input type="text" id="custPass" class="form-control" placeholder="🔑 الباسوورد" required></div>
             <div class="col-md-2"><input type="tel" id="custPhone" class="form-control" placeholder="رقم الهاتف"></div>
-            <div class="col-md-3"><input type="date" id="expiryDate" class="form-control" required></div>
+            <div class="col-md-3"><input type="text" id="expiryDate" class="form-control" placeholder="📅 تاريخ الانتهاء (يدوي)" required></div>
             <div class="col-12 mt-3 text-center">
                 <button type="submit" class="btn btn-primary w-100">حفظ في النظام</button>
             </div>
@@ -93,19 +93,19 @@
     }
 
     function copyData(name, user, pass, expiry) {
-        const text = `تفاصيل الاشتراك:\nالاسم: ${name}\nاليوزر: ${user}\nالباسوورد: ${pass}\nينتهي في: ${expiry}`;
+        const text = `مرحباً ${name}\n\nتم تفعيل اشتراكك بنجاح:\n👤 اليوزر: ${user}\n🔑 الباسوورد: ${pass}\n📅 تاريخ الانتهاء: ${expiry}\n\nنتمنى لك مشاهدة ممتعة!`;
         navigator.clipboard.writeText(text).then(() => {
-            alert('تم نسخ البيانات بنجاح!');
+            alert('تم نسخ الرسالة المنسقة بنجاح!');
         });
     }
 
     function sendWhatsApp(name, user, pass, phone, expiry) {
-        const message = `مرحباً ${name}%0Aاليوزر: ${user}%0Aالباسوورد: ${pass}%0Aينتهي في: ${expiry}`;
+        const message = `مرحباً ${name}%0A%0Aتم تفعيل اشتراكك بنجاح:%0A👤 اليوزر: ${user}%0A🔑 الباسوورد: ${pass}%0A📅 تاريخ الانتهاء: ${expiry}%0A%0Aنتمنى لك مشاهدة ممتعة!`;
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     }
 
     function deleteCustomer(id) {
-        if(confirm('حذف الزبون؟')) {
+        if(confirm('هل تريد حذف هذا الزبون؟')) {
             let customers = JSON.parse(localStorage.getItem('myCustomers')).filter(c => c.id !== id);
             localStorage.setItem('myCustomers', JSON.stringify(customers));
             displayCustomers();
