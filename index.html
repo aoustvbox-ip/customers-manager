@@ -11,20 +11,24 @@
         .table th { background-color: #0d6efd; color: white; }
         .btn-whatsapp { background-color: #25D366; color: white; }
         .btn-copy { background-color: #6c757d; color: white; }
-        .btn-whatsapp:hover, .btn-copy:hover { opacity: 0.8; color: white; }
+        .btn-support { background-color: #ff9800; color: white; font-weight: bold; }
+        .btn-whatsapp:hover, .btn-copy:hover, .btn-support:hover { opacity: 0.8; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container py-4">
-    <h3 class="text-center mb-4">نظام إدارة الاشتراكات</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>نظام إدارة الاشتراكات</h3>
+        <a href="https://wa.me/9647866134931" target="_blank" class="btn btn-support">📞 خدمة الزبائن</a>
+    </div>
 
     <div class="card p-3 mb-4">
         <form id="customerForm" class="row g-2">
             <div class="col-md-3"><input type="text" id="custName" class="form-control" placeholder="اسم الزبون" required></div>
             <div class="col-md-2"><input type="text" id="custUser" class="form-control" placeholder="👤 اليوزر" required></div>
             <div class="col-md-2"><input type="text" id="custPass" class="form-control" placeholder="🔑 الباسوورد" required></div>
-            <div class="col-md-2"><input type="tel" id="custPhone" class="form-control" placeholder="رقم الهاتف"></div>
+            <div class="col-md-2"><input type="tel" id="custPhone" class="form-control" placeholder="رقم هاتف الزبون"></div>
             <div class="col-md-3"><input type="text" id="expiryDate" class="form-control" placeholder="📅 تاريخ الانتهاء (يدوي)" required></div>
             <div class="col-12 mt-3 text-center">
                 <button type="submit" class="btn btn-primary w-100">حفظ في النظام</button>
@@ -34,7 +38,7 @@
 
     <div class="card p-3">
         <div class="table-responsive">
-            <table class="table table-hover text-center">
+            <table class="table table-hover text-center align-middle">
                 <thead>
                     <tr>
                         <th>الاسم</th>
@@ -78,8 +82,8 @@
         customers.forEach(c => {
             tableBody.innerHTML += `
                 <tr>
-                    <td>${c.name}</td>
-                    <td><small>U: ${c.user}<br>P: ${c.pass}</small></td>
+                    <td><strong>${c.name}</strong></td>
+                    <td><small>👤: ${c.user}<br>🔑: ${c.pass}</small></td>
                     <td><span class="badge bg-warning text-dark">${c.expiry}</span></td>
                     <td>
                         <div class="btn-group">
@@ -100,6 +104,7 @@
     }
 
     function sendWhatsApp(name, user, pass, phone, expiry) {
+        if(!phone) { alert('يرجى إضافة رقم هاتف للزبون أولاً'); return; }
         const message = `مرحباً ${name}%0A%0Aتم تفعيل اشتراكك بنجاح:%0A👤 اليوزر: ${user}%0A🔑 الباسوورد: ${pass}%0A📅 تاريخ الانتهاء: ${expiry}%0A%0Aنتمنى لك مشاهدة ممتعة!`;
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     }
