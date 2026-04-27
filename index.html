@@ -10,54 +10,40 @@
         .card { border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .table th { background-color: #0d6efd; color: white; }
         .btn-whatsapp { background-color: #25D366; color: white; }
-        .btn-whatsapp:hover { background-color: #128C7E; color: white; }
+        .btn-copy { background-color: #6c757d; color: white; }
+        .btn-whatsapp:hover, .btn-copy:hover { opacity: 0.8; color: white; }
     </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <h2 class="text-center mb-4">نظام إدارة اشتراكات الزبائن</h2>
+<div class="container py-4">
+    <h3 class="text-center mb-4">نظام إدارة الاشتراكات</h3>
 
-    <div class="card p-4 mb-4">
-        <h5 class="card-title mb-3">إضافة اشتراك جديد</h5>
-        <form id="customerForm" class="row g-3">
-            <div class="col-md-3">
-                <input type="text" id="custName" class="form-control" placeholder="اسم الزبون" required>
-            </div>
-            <div class="col-md-2">
-                <input type="text" id="custUser" class="form-control" placeholder="اليوزر" required>
-            </div>
-            <div class="col-md-2">
-                <input type="text" id="custPass" class="form-control" placeholder="الباسوورد" required>
-            </div>
-            <div class="col-md-2">
-                <input type="tel" id="custPhone" class="form-control" placeholder="رقم الموبايل (مثال: 964...)" required>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label small">تاريخ الانتهاء</label>
-                <input type="date" id="expiryDate" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100">حفظ الاشتراك في النظام</button>
+    <div class="card p-3 mb-4">
+        <form id="customerForm" class="row g-2">
+            <div class="col-md-3"><input type="text" id="custName" class="form-control" placeholder="اسم الزبون" required></div>
+            <div class="col-md-2"><input type="text" id="custUser" class="form-control" placeholder="اليوزر" required></div>
+            <div class="col-md-2"><input type="text" id="custPass" class="form-control" placeholder="الباسوورد" required></div>
+            <div class="col-md-2"><input type="tel" id="custPhone" class="form-control" placeholder="رقم الهاتف"></div>
+            <div class="col-md-3"><input type="date" id="expiryDate" class="form-control" required></div>
+            <div class="col-12 mt-3 text-center">
+                <button type="submit" class="btn btn-primary w-100">حفظ في النظام</button>
             </div>
         </form>
     </div>
 
-    <div class="card p-4">
-        <h5 class="card-title mb-3">الاشتراكات الحالية</h5>
+    <div class="card p-3">
         <div class="table-responsive">
-            <table class="table table-hover align-middle text-center">
+            <table class="table table-hover text-center">
                 <thead>
                     <tr>
                         <th>الاسم</th>
-                        <th>اليوزر/الباسوورد</th>
-                        <th>تاريخ الانتهاء</th>
-                        <th>الموبايل</th>
+                        <th>البيانات</th>
+                        <th>الانتهاء</th>
                         <th>إجراءات</th>
                     </tr>
                 </thead>
-                <tbody id="customerTableBody">
-                    </tbody>
+                <tbody id="customerTableBody"></tbody>
             </table>
         </div>
     </div>
@@ -67,12 +53,10 @@
     const form = document.getElementById('customerForm');
     const tableBody = document.getElementById('customerTableBody');
 
-    // تحميل البيانات عند فتح الصفحة
     document.addEventListener('DOMContentLoaded', displayCustomers);
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
         const customer = {
             id: Date.now(),
             name: document.getElementById('custName').value,
@@ -81,54 +65,52 @@
             phone: document.getElementById('custPhone').value,
             expiry: document.getElementById('expiryDate').value
         };
-
-        saveCustomer(customer);
+        let customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
+        customers.push(customer);
+        localStorage.setItem('myCustomers', JSON.stringify(customers));
         form.reset();
         displayCustomers();
     });
 
-    function saveCustomer(customer) {
-        let customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
-        customers.push(customer);
-        localStorage.setItem('myCustomers', JSON.stringify(customers));
-    }
-
     function displayCustomers() {
         let customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
         tableBody.innerHTML = '';
-
         customers.forEach(c => {
-            const row = `
+            tableBody.innerHTML += `
                 <tr>
                     <td>${c.name}</td>
                     <td><small>U: ${c.user}<br>P: ${c.pass}</small></td>
-                    <td><span class="badge bg-info text-dark">${c.expiry}</span></td>
-                    <td>${c.phone}</td>
+                    <td><span class="badge bg-warning text-dark">${c.expiry}</span></td>
                     <td>
-                        <button onclick="sendWhatsApp('${c.name}', '${c.user}', '${c.pass}', '${c.phone}', '${c.expiry}')" class="btn btn-sm btn-whatsapp">إرسال واتساب</button>
-                        <button onclick="deleteCustomer(${c.id})" class="btn btn-sm btn-danger">حذف</button>
+                        <div class="btn-group">
+                            <button onclick="copyData('${c.name}', '${c.user}', '${c.pass}', '${c.expiry}')" class="btn btn-sm btn-copy">نسخ</button>
+                            <button onclick="sendWhatsApp('${c.name}', '${c.user}', '${c.pass}', '${c.phone}', '${c.expiry}')" class="btn btn-sm btn-whatsapp">واتساب</button>
+                            <button onclick="deleteCustomer(${c.id})" class="btn btn-sm btn-danger">حذف</button>
+                        </div>
                     </td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
+                </tr>`;
+        });
+    }
+
+    function copyData(name, user, pass, expiry) {
+        const text = `تفاصيل الاشتراك:\nالاسم: ${name}\nاليوزر: ${user}\nالباسوورد: ${pass}\nينتهي في: ${expiry}`;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('تم نسخ البيانات بنجاح!');
         });
     }
 
     function sendWhatsApp(name, user, pass, phone, expiry) {
-        const message = `مرحباً أستاذ ${name}%0A%0Aتم تفعيل اشتراكك بنجاح:%0A👤 اليوزر: ${user}%0A🔑 الباسوورد: ${pass}%0A📅 تاريخ الانتهاء: ${expiry}%0A%0Aنتمنى لك مشاهدة ممتعة!`;
-        const url = `https://wa.me/${phone}?text=${message}`;
-        window.open(url, '_blank');
+        const message = `مرحباً ${name}%0Aاليوزر: ${user}%0Aالباسوورد: ${pass}%0Aينتهي في: ${expiry}`;
+        window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     }
 
     function deleteCustomer(id) {
-        if(confirm('هل أنت متأكد من حذف هذا الزبون؟')) {
-            let customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
-            customers = customers.filter(c => c.id !== id);
+        if(confirm('حذف الزبون؟')) {
+            let customers = JSON.parse(localStorage.getItem('myCustomers')).filter(c => c.id !== id);
             localStorage.setItem('myCustomers', JSON.stringify(customers));
             displayCustomers();
         }
     }
 </script>
-
 </body>
 </html>
